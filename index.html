@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>송건호 — Brand & Graphic Designer</title>
+<meta name="description" content="브랜드의 첫인상을 설계하는 그래픽 디자이너 송건호의 포트폴리오" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<script>
+// 확인용 링크 안에서 오류가 나면 바깥 화면에 문구로 보여줌 (빈 화면 원인 찾기용)
+window.addEventListener("error", function (e) {
+  try { if (window.parent !== window && window.parent.PFReportError) window.parent.PFReportError((e.message || "오류") + (e.filename ? " @ " + e.filename.split("/").pop() + ":" + e.lineno : "")); } catch (x) {}
+});
+// 첫 화면 로고 인트로는 창마다 한 번만 (About에서 돌아올 때는 생략)
+(function () {
+  var seen = false;
+  try { seen = sessionStorage.getItem("pf-intro") === "1"; } catch (e) {}
+  document.documentElement.classList.add(seen ? "intro-seen" : "intro");
+})();
+</script>
+<style>
+/* ── 토큰 ─────────────────────────────── */
+:root{
+  --bg:#FAFAF7;
+  --surface:#FFFFFF;
+  --ink:#141414;
+  --ink-2:#5C5C58;
+  --ink-3:#9A9A94;
+  --line:#E6E5DF;
+  --accent:#FF5A1F;
+  --serif:"Instrument Serif", "Times New Roman", serif;
+  --sans:"Pretendard", "Inter", -apple-system, sans-serif;
+  --ease:cubic-bezier(.2,.7,.1,1);
+  --gutter:clamp(16px, 4vw, 56px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+.wrap{max-width:1320px;margin:0 auto;padding:0 var(--gutter)}
+.serif{font-family:var(--serif);font-weight:400}
+.italic{font-style:italic}
+.eyebrow{
+  font-family:"Inter",var(--sans);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+/* ── 첫 화면 스플래시: 로고만 보이다가 흐려지며 메인이 드러남 ──
+   (link-shell.html 의 .boot 와 크기·위치를 똑같이 맞춰 둠) */
+.splash{
+  position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg);
+  transition:opacity .9s var(--ease),filter .9s var(--ease);
+}
+.splash__logo{
+  font-family:var(--serif);font-size:clamp(64px,13vw,168px);line-height:1;letter-spacing:-.02em;
+  opacity:0;filter:blur(8px);transition:opacity .7s var(--ease),filter .7s var(--ease),transform .9s var(--ease);
+}
+.splash__logo b{color:var(--accent);font-weight:400;display:inline-block;transform:scale(0);transition:transform .5s cubic-bezier(.3,1.6,.5,1) .2s}
+.splash.show .splash__logo{opacity:1;filter:none}
+.splash.show .splash__logo b{transform:none}
+.splash.no-anim .splash__logo,.splash.no-anim .splash__logo b{transition:none}
+.splash.out{opacity:0;filter:blur(18px);pointer-events:none}
+.splash.out .splash__logo{transform:scale(1.06)}
+.splash.gone,.intro-seen .splash{display:none}
+/* 스플래시 뒤의 메인 페이지: 흐린 상태에서 선명해짐 */
+#header,main{transition:filter .9s var(--ease),opacity .9s var(--ease)}
+.intro #header,.intro main{filter:blur(14px);opacity:.6}
+
+/* ── 커서 ──────────────────────────────── */
+.cursor{
+  position:fixed;top:0;left:0;z-index:90;pointer-events:none;
+  width:10px;height:10px;border-radius:50%;background:var(--ink);
+  transform:translate(-50%,-50%);
+  transition:width .35s var(--ease),height .35s var(--ease),background .35s;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Inter";font-size:12px;font-weight:500;color:#fff;letter-spacing:.04em;
+  mix-blend-mode:normal;
+}
+.cursor span{opacity:0;transition:opacity .2s}
+.cursor.is-view{width:88px;height:88px;background:var(--accent)}
+.cursor.is-view span{opacity:1}
+.cursor.is-link{width:44px;height:44px;background:rgba(20,20,20,.08)}
+@media (hover:none),(pointer:coarse){.cursor{display:none}}
+
+/* ── 헤더 ──────────────────────────────── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  transition:background .3s, backdrop-filter .3s, border-color .3s;
+  border-bottom:1px solid transparent;
+}
+.header.scrolled{background:rgba(250,250,247,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+/* 로고(왼쪽) · 메뉴(정확히 가운데) · 상태(오른쪽) */
+.header .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px}
+.header .logo{justify-self:start}
+.header .nav{grid-column:2}
+.header .status{justify-self:end}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:-.01em}
+.logo b{color:var(--accent);font-weight:400}
+.nav{display:flex;gap:32px;font-size:14px;font-weight:500}
+.nav a{position:relative;padding:4px 0}
+.nav a::after{
+  content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--ink);
+  transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease);
+}
+.nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.status i{width:8px;height:8px;border-radius:50%;background:#2BB673;position:relative}
+.status i::after{content:"";position:absolute;inset:0;border-radius:50%;background:#2BB673;animation:ping 2s infinite}
+@keyframes ping{to{transform:scale(2.8);opacity:0}}
+@media (max-width:720px){.status{display:none}.nav{gap:20px}}
+
+/* ── 히어로 ────────────────────────────── */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px 0 48px;position:relative}
+.hero__title{
+  font-family:"Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;font-weight:500;
+  font-size:clamp(72px,17vw,260px);line-height:.88;letter-spacing:-.055em;
+}
+.hero__title .line{display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.1em}
+.hero__title .line > span{display:inline-block;transform:translateY(110%);transition:transform 1.2s var(--ease)}
+body.loaded .hero__title .line > span{transform:none}
+.hero__title .accent-d{color:var(--accent)}
+.hero__bottom{
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end;
+  margin-top:48px;padding-top:28px;border-top:1px solid var(--line);
+}
+.hero__intro{max-width:460px;font-size:17px;color:var(--ink-2);line-height:1.7}
+.hero__intro strong{color:var(--ink);font-weight:600}
+.scroll-hint{display:flex;align-items:center;gap:12px;font-family:"Inter";font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.scroll-hint .bar{width:1px;height:48px;background:var(--line);position:relative;overflow:hidden}
+.scroll-hint .bar::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:var(--ink);animation:drop 1.8s var(--ease) infinite}
+@keyframes drop{to{top:100%}}
+
+/* 히어로 장식 도형 */
+.shape{
+  position:absolute;top:110px;right:var(--gutter);width:clamp(120px,18vw,260px);aspect-ratio:1;
+  pointer-events:none;
+}
+.shape svg{width:100%;height:100%;animation:spin 28s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.shape .core{position:absolute;inset:32%;border-radius:50%;background:var(--accent);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(.86)}}
+@media (max-width:720px){
+  .hero__bottom{grid-template-columns:1fr}
+  .scroll-hint{display:none}
+  .shape{top:96px;width:110px}
+}
+
+/* 첫 화면과 Work 사이 구분선 */
+#work{border-top:1px solid var(--line)}
+
+/* ── 섹션 공통 ─────────────────────────── */
+section{position:relative}
+.section{padding:clamp(88px,12vw,160px) 0}
+.section__head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:56px;flex-wrap:wrap}
+.section__title{font-family:var(--serif);font-weight:400;font-size:clamp(44px,7vw,96px);line-height:1;letter-spacing:-.03em}
+.section__title em{color:var(--accent)}
+.section__note{max-width:340px;color:var(--ink-2);font-size:15px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── 작업 그리드 ───────────────────────── */
+.works{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(24px,3vw,48px) clamp(20px,2.4vw,36px)}
+.work{cursor:pointer}
+.work:nth-child(even){margin-top:clamp(0px,9vw,140px)}
+.work__thumb{
+  position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:6px;
+  background:var(--c-bg);
+}
+.work__art{position:absolute;inset:0;transition:transform 1.1s var(--ease)}
+.work:hover .work__art{transform:scale(1.05)}
+.work__tag{
+  position:absolute;top:16px;left:16px;z-index:2;
+  font-family:"Inter";font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  background:rgba(255,255,255,.9);color:var(--ink);padding:6px 10px;border-radius:99px;
+}
+.work__meta{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:18px}
+.work__title{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.work__sub{color:var(--ink-2);font-size:14px;margin-top:2px}
+.work__num{font-family:var(--serif);font-size:22px;color:var(--ink-3)}
+.work__arrow{display:inline-block;transition:transform .4s var(--ease)}
+.work:hover .work__arrow{transform:translateX(6px)}
+@media (max-width:720px){
+  .works{grid-template-columns:1fr}
+  .work:nth-child(even){margin-top:0}
+}
+
+/* 프로젝트 사진 커튼 공개: 사진은 아래에서 위로 막이 걷히고, 글자는 조금 늦게 페이드업 */
+.work.reveal{opacity:1;transform:none}
+.work .work__thumb{clip-path:inset(100% 0 0 0);transition:clip-path 1.3s var(--ease) var(--d,0s)}
+.work.in .work__thumb{clip-path:inset(0)}
+.work:not(.in) .work__art{transform:scale(1.25)}
+.work.in .work__art{transition:transform 1.6s var(--ease) var(--d,0s)}
+.work.in .work__thumb:hover .work__art{transition:transform 1.1s var(--ease)}
+.work .work__meta{opacity:0;transform:translateY(24px);transition:opacity 1s var(--ease) calc(var(--d,0s) + .25s),transform 1s var(--ease) calc(var(--d,0s) + .25s)}
+.work.in .work__meta{opacity:1;transform:none}
+
+/* 썸네일 아트 (실제 이미지로 교체할 자리) */
+.art-cafe{--c-bg:#EFE6D8}
+.art-cafe .work__art{display:grid;place-items:center}
+.art-cafe .cup{width:52%;aspect-ratio:1;border-radius:50%;background:#3B2A20;display:grid;place-items:center;box-shadow:0 30px 60px -20px rgba(59,42,32,.5)}
+.art-cafe .cup span{font-family:var(--serif);color:#EFE6D8;font-size:clamp(28px,4vw,56px);font-style:italic}
+.art-cafe .ring{position:absolute;width:74%;aspect-ratio:1;border:1px dashed #3B2A20;border-radius:50%;opacity:.35;animation:spin 40s linear infinite}
+
+.art-mag{--c-bg:#1E1E1E}
+.art-mag .work__art{padding:12%;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.art-mag .mag-top{display:flex;justify-content:space-between;font-family:"Inter";font-size:11px;letter-spacing:.12em;opacity:.7}
+.art-mag .mag-title{font-family:var(--serif);font-size:clamp(56px,9vw,128px);line-height:.85;letter-spacing:-.04em}
+.art-mag .mag-title i{color:#D9FF3F}
+.art-mag .mag-bar{height:6px;background:#D9FF3F;width:40%}
+
+.art-skin{--c-bg:#DCE5DA}
+.art-skin .work__art{display:flex;align-items:flex-end;justify-content:center;gap:6%;padding-bottom:16%}
+.art-skin .bottle{border-radius:14px 14px 8px 8px;background:#F7F5EF;position:relative;box-shadow:0 24px 40px -18px rgba(40,60,40,.4)}
+.art-skin .bottle::before{content:"";position:absolute;left:30%;right:30%;top:-14%;height:14%;background:#5F7A5C;border-radius:4px 4px 0 0}
+.art-skin .bottle::after{content:"VEG";position:absolute;left:0;right:0;top:40%;text-align:center;font-family:"Inter";font-weight:600;letter-spacing:.2em;font-size:10px;color:#5F7A5C}
+.art-skin .b1{width:22%;height:46%}
+.art-skin .b2{width:26%;height:60%;background:#5F7A5C}
+.art-skin .b2::before{background:#F7F5EF}
+.art-skin .b2::after{color:#F7F5EF}
+.art-skin .b3{width:18%;height:34%}
+
+.art-fest{--c-bg:#3D3BF3}
+.art-fest .work__art{overflow:hidden}
+.art-fest .blob{position:absolute;border-radius:50%;mix-blend-mode:screen;filter:blur(2px)}
+.art-fest .blob.a{width:70%;aspect-ratio:1;background:#FF5A1F;left:-10%;top:8%;animation:float 9s ease-in-out infinite}
+.art-fest .blob.b{width:60%;aspect-ratio:1;background:#FFC83D;right:-14%;top:34%;animation:float 11s ease-in-out infinite reverse}
+.art-fest .fest-text{position:absolute;left:10%;right:10%;bottom:10%;color:#fff;font-family:"Inter";font-weight:600;font-size:clamp(28px,4.4vw,60px);line-height:.95;letter-spacing:-.04em}
+.art-fest .fest-text small{display:block;font-size:12px;letter-spacing:.14em;font-weight:500;margin-top:12px;opacity:.85}
+@keyframes float{50%{transform:translate(6%,-8%)}}
+
+/* ── About ─────────────────────────────── */
+.about{background:var(--surface);border-top:1px solid var(--line)}
+.about__grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(40px,7vw,120px)}
+.about__lead{font-size:clamp(24px,2.6vw,34px);line-height:1.45;letter-spacing:-.02em;font-weight:500}
+.about__lead .serif{font-size:1.15em;color:var(--accent)}
+.about__body{margin-top:28px;color:var(--ink-2);max-width:520px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:56px;border-top:1px solid var(--line)}
+.stat{padding:24px 0}
+.stat + .stat{padding-left:20px;border-left:1px solid var(--line)}
+.stat__num{font-family:var(--serif);font-size:clamp(44px,5vw,72px);line-height:1}
+.stat__label{font-size:13px;color:var(--ink-2);margin-top:6px}
+
+.timeline{list-style:none}
+.timeline li{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--line)}
+.timeline li:first-child{border-top:1px solid var(--ink)}
+.timeline .when{font-family:"Inter";font-size:13px;color:var(--ink-3)}
+.timeline .what{font-weight:600}
+.timeline .where{color:var(--ink-2);font-size:14px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px}
+.tools span{
+  border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:14px;
+  transition:background .3s,color .3s,border-color .3s;
+}
+.tools span:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.more-link{font-size:14px;font-weight:500;border-bottom:1px solid var(--ink);padding-bottom:2px}
+.more-link span{display:inline-block;transition:transform .4s var(--ease)}
+.more-link:hover span{transform:translateX(4px)}
+.sub-label{font-family:"Inter";font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:44px 0 0}
+@media (max-width:900px){.about__grid{grid-template-columns:1fr}}
+@media (max-width:480px){.timeline li{grid-template-columns:1fr;gap:4px}.stat + .stat{padding-left:12px}}
+
+/* ── Contact ───────────────────────────── */
+.contact{background:var(--ink);color:var(--bg);overflow:hidden}
+.contact .eyebrow{color:#A9A9A3}
+.contact__big{
+  display:inline-block;margin-top:32px;position:relative;
+  font-family:var(--serif);font-size:clamp(34px,7vw,112px);line-height:1;letter-spacing:-.03em;
+  word-break:break-all;
+}
+.contact__big::after{
+  content:"";position:absolute;left:0;bottom:-.04em;height:2px;width:100%;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease);
+}
+.contact__big:hover::after{transform:scaleX(1)}
+.contact__big .arrow{display:inline-block;color:var(--accent);transition:transform .6s var(--ease)}
+.contact__big:hover .arrow{transform:translate(.08em,-.08em) rotate(-45deg)}
+.contact__row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-top:96px;padding-top:28px;border-top:1px solid #333}
+.contact__phone{margin-top:24px;font-family:"Inter";font-size:clamp(18px,2.4vw,28px);letter-spacing:.02em;color:#CFCFC9;font-variant-numeric:tabular-nums}
+.contact__phone .label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8A8A85;margin-right:8px}
+.contact__phone a:hover{color:var(--accent)}
+.socials{display:flex;gap:28px;font-size:14px}
+.socials a{color:#CFCFC9;transition:color .3s}
+.socials a:hover{color:var(--accent)}
+.copy{font-size:13px;color:#8A8A85}
+.top-btn{width:52px;height:52px;border-radius:50%;border:1px solid #444;display:grid;place-items:center;color:#fff;transition:background .3s,border-color .3s}
+.top-btn:hover{background:var(--accent);border-color:var(--accent)}
+
+/* ── 모달 ──────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:80;visibility:hidden;pointer-events:none}
+.modal.open{visibility:visible;pointer-events:auto}
+/* 프로젝트 패널 뒤 배경: 어둡게 덮는 대신 흐리게(블러) 처리 */
+.modal__dim{position:absolute;inset:0;background:rgba(20,20,20,.18);backdrop-filter:blur(12px) saturate(.9);-webkit-backdrop-filter:blur(12px) saturate(.9);opacity:0;transition:opacity .5s}
+.modal.open .modal__dim{opacity:1}
+.modal__panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(720px,100%);background:var(--bg);
+  overflow-y:auto;transform:translateX(100%);transition:transform .7s var(--ease);
+}
+.modal.open .modal__panel{transform:none}
+.modal__close{
+  position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;
+  padding:20px var(--gutter);background:rgba(250,250,247,.9);backdrop-filter:blur(10px);z-index:2;
+  font-family:"Inter";font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+}
+.modal__close button{background:none;border:1px solid var(--line);width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;color:var(--ink);transition:transform .4s var(--ease)}
+.modal__close button:hover{transform:rotate(90deg)}
+.modal__content{padding:8px var(--gutter) 80px}
+.modal__visual{aspect-ratio:16/10;border-radius:6px;overflow:hidden;position:relative;background:var(--c-bg)}
+.modal__visual .work__art{position:absolute;inset:0}
+.modal__title{font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.02em;margin:32px 0 8px}
+.modal__sub{color:var(--ink-2)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;margin:32px 0;padding:20px 0;border-block:1px solid var(--line)}
+.facts dt{font-family:"Inter";font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.facts dd{font-size:14px;font-weight:500;margin-top:4px}
+.case h4{font-size:13px;font-family:"Inter";letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:32px 0 8px;font-weight:600}
+.case p{color:var(--ink-2)}
+.case .result{display:flex;gap:32px;flex-wrap:wrap;margin-top:12px}
+.case .result b{display:block;font-family:var(--serif);font-weight:400;font-size:44px;color:var(--ink);line-height:1}
+.case .result small{font-size:13px;color:var(--ink-2)}
+/* 진행 단계 (Planning → Engineering → Installation) */
+.steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;counter-reset:step}
+.steps li{border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:6px;align-content:start;counter-increment:step}
+.steps li::before{content:counter(step,decimal-leading-zero);font-family:var(--serif);font-size:24px;line-height:1;color:var(--accent)}
+.steps b{font-size:14px}
+.steps span{font-size:13px;color:var(--ink-2);line-height:1.6}
+/* 컨셉 정리 */
+.notes{display:grid;gap:10px;margin-top:12px}
+.notes div{display:grid;grid-template-columns:140px 1fr;gap:16px}
+.notes dt{font-family:"Inter";font-size:12px;letter-spacing:.08em;color:var(--ink-3);padding-top:2px}
+.notes dd{color:var(--ink);font-size:15px}
+@media (max-width:560px){.steps{grid-template-columns:1fr}.notes div{grid-template-columns:1fr;gap:2px}}
+@media (max-width:480px){.facts{grid-template-columns:1fr 1fr}}
+
+/* ── 실제 사진 (content.js) ────────────── */
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.accent{color:var(--accent)}
+/* 임시 그림 지정이 없는 새 프로젝트용 기본 배경 */
+.art-plain{--c-bg:#ECEAE3}
+.art-plain .work__art{display:flex;align-items:flex-end;padding:10%}
+.plain-title{font-family:var(--serif);font-size:clamp(32px,4vw,56px);line-height:1;letter-spacing:-.02em;color:var(--ink-3)}
+/* 상세 패널 사진 슬라이드: 첫 장 = 대표 사진, 이어서 상세 사진들. 옆으로 넘겨서 봄 */
+.slider{position:relative;border-radius:6px;overflow:hidden;background:var(--line)}
+.slider__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;cursor:grab}
+.slider__track::-webkit-scrollbar{display:none}
+.slider__track.dragging{scroll-snap-type:none;cursor:grabbing;user-select:none}
+.slide{flex:0 0 100%;aspect-ratio:16/10;position:relative;margin:0;overflow:hidden;scroll-snap-align:start;border-radius:0}
+.gallery__item{background:var(--line)}
+.gallery__item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none}
+.slider__btn{
+  position:absolute;top:50%;z-index:4;width:44px;height:44px;margin-top:-22px;border-radius:50%;border:0;cursor:pointer;
+  display:grid;place-items:center;font-size:22px;line-height:1;color:var(--ink);background:rgba(255,255,255,.88);
+  box-shadow:0 6px 20px -8px rgba(20,20,20,.35);transition:opacity .25s,transform .25s var(--ease);
+}
+.slider__btn:hover{transform:scale(1.06)}
+.slider__btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.slider__btn.prev{left:12px}
+.slider__btn.next{right:12px}
+.slider__btn:disabled{opacity:0;pointer-events:none}
+.slider__foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:12px;min-height:20px}
+.slider__dots{display:flex;gap:6px;flex-wrap:wrap}
+.slider__dot{width:8px;height:8px;padding:0;border:0;border-radius:99px;background:var(--line);cursor:pointer;transition:width .3s var(--ease),background .3s}
+.slider__dot.on{width:22px;background:var(--ink)}
+.slider__count{font-family:"Inter";font-size:12px;letter-spacing:.08em;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slider.single .slider__btn,.slider.single + .slider__foot{display:none}
+/* 아직 없는 사진 파일은 숨김 (편집 모드에서는 editor.css가 빈 칸으로 보여줌) */
+.photo.is-missing,.gallery__item.is-missing,.gallery__item.is-pending{display:none}
+.status[hidden]{display:none}
+
+/* 숫자 카운트: 흐릿하게 떠오르며 등장 */
+.stat__num .n,.stat__num .sfx{display:inline-block;font-variant-numeric:tabular-nums;opacity:0;filter:blur(6px);transform:translateY(8px);transition:opacity .8s var(--ease),filter .8s var(--ease),transform .8s var(--ease)}
+.stat__num .sfx{color:var(--accent);transition-delay:.4s}
+.stat__num.counting .n,.stat__num.counting .sfx{opacity:1;filter:none;transform:none}
+
+/* ── 중앙 정렬 레이아웃 ────────────────── */
+.eyebrow{justify-content:center}
+.hero{justify-content:center;text-align:center;padding:140px 0 64px}
+.hero__bottom{grid-template-columns:1fr;justify-items:center;gap:28px}
+.hero__intro{margin:0 auto}
+.section__head{flex-direction:column;align-items:center;text-align:center;gap:18px}
+.section__note{margin:0 auto}
+.about__head{flex-direction:column;justify-content:center!important}
+.about__grid{grid-template-columns:1fr;max-width:760px;margin:0 auto;text-align:center;gap:56px}
+.about__body{margin-left:auto;margin-right:auto}
+.timeline{text-align:left}
+.sub-label{text-align:center}
+.tools{justify-content:center}
+.contact{text-align:center}
+.contact__row{flex-direction:column;justify-content:center;gap:28px}
+.socials{justify-content:center;flex-wrap:wrap}
+
+/* 모션 줄이기 */
+@media (prefers-reduced-motion:reduce){
+  .stat__num .n,.stat__num .sfx{opacity:1;filter:none;transform:none}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .hero__title .line > span{transform:none}
+  /* 첫 화면 인트로는 흐림·확대 없이 페이드만 유지 */
+  .splash,.splash__logo{transition:opacity .8s ease!important}
+  .splash__logo,.splash.out{filter:none}
+  .splash.out .splash__logo{transform:none}
+  .intro #header,.intro main{filter:none}
+}
+</style>
+</head>
+<body>
+
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash__logo">HELLO<b>!</b></div>
+</div>
+
+<div class="cursor" id="cursor"><span>View</span></div>
+
+<header class="header" id="header">
+  <div class="wrap">
+    <a href="#top" class="logo"><span data-c="firstEn"></span><b>.</b></a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="status" id="status"><i></i><span></span></div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- 히어로 -->
+  <section class="hero">
+    <div class="shape" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs><path id="circ" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" /></defs>
+        <text font-family="Inter" font-size="13.5" letter-spacing="4" fill="#141414">
+          <textPath href="#circ">BRAND · IDENTITY · GRAPHIC · DESIGN · </textPath>
+        </text>
+      </svg>
+      <div class="core"></div>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow" style="margin-bottom:28px">Portfolio 2026</p>
+      <h1 class="hero__title">
+        <span class="line"><span><span class="accent-d">D</span>esigner</span></span>
+      </h1>
+      <div class="hero__bottom">
+        <p class="hero__intro" id="heroIntro"></p>
+        <div class="scroll-hint"><span class="bar"></span>Scroll</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 작업 -->
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section__head">
+        <h2 class="section__title reveal">Selected <em class="italic">Work</em></h2>
+        <p class="section__note reveal" id="workNote"></p>
+      </div>
+
+      <div class="works" id="works"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section about" id="about">
+    <div class="wrap">
+      <div class="about__head" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:40px"><p class="eyebrow reveal">About me</p><a href="about.html" class="reveal more-link">자세한 소개 · 툴 숙련도 보기 <span>→</span></a></div>
+      <div class="about__grid">
+        <div>
+          <p class="about__lead reveal" id="aboutLead"></p>
+          <p class="about__body reveal" id="aboutBody"></p>
+          <div class="stats reveal" id="stats"></div>
+        </div>
+
+        <div>
+          <ul class="timeline reveal" id="homeExperience"></ul>
+          <p class="sub-label reveal">Tools</p>
+          <div class="tools reveal" id="homeTools"></div>
+          <p class="sub-label reveal">Awards</p>
+          <ul class="timeline reveal" id="homeAwards" style="margin-top:16px"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact" id="contact">
+    <div class="wrap">
+      <p class="eyebrow reveal">Let's work together</p>
+      <a class="contact__big reveal" id="contactEmail" href="#"><span></span><span class="arrow">↗</span></a>
+      <p class="contact__phone reveal" id="phone"></p>
+      <div class="contact__row">
+        <nav class="socials" id="socials"></nav>
+        <span class="copy" id="copy"></span>
+        <a href="#top" class="top-btn" aria-label="맨 위로">↑</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 케이스 모달 -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal__dim" data-close></div>
+  <aside class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal__close"><span id="mNum">Project 01</span><button data-close aria-label="닫기">×</button></div>
+    <div class="modal__content">
+      <div class="slider" id="mSlider" aria-roledescription="carousel" aria-label="프로젝트 사진">
+        <div class="slider__track" id="mTrack"></div>
+        <button type="button" class="slider__btn prev" id="mPrev" aria-label="이전 사진">‹</button>
+        <button type="button" class="slider__btn next" id="mNext" aria-label="다음 사진">›</button>
+      </div>
+      <div class="slider__foot" id="mSliderFoot"><div class="slider__dots" id="mDots"></div><span class="slider__count" id="mCount"></span></div>
+      <h3 class="modal__title" id="mTitle"></h3>
+      <p class="modal__sub" id="mSub"></p>
+      <dl class="facts" id="mFacts"></dl>
+      <div class="case" id="mCase"></div>
+    </div>
+  </aside>
+</div>
+
+
+<script src="content.js"></script>
+<script>
+// 확인용 링크(link-shell.html) 안에서 열렸으면 링크에 저장된 내용을 사용
+window.PF_SHELL = (() => { try { return window.parent !== window && window.parent.PFStore ? window.parent.PFStore : null; } catch (e) { return null; } })();
+try { if (window.PF_SHELL && window.parent.PFContent) window.CONTENT = JSON.parse(JSON.stringify(window.parent.PFContent)); } catch (e) {}
+</script>
+<script>
+/* ── content.js 내용으로 화면 채우기 ── */
+const C = window.CONTENT;
+const P = C.profile;
+const esc = (s = "") => String(s).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+// **굵게** → <strong>, *강조* → 주황 세리프 기울임
+const md = (s = "") => esc(s)
+  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/\*(.+?)\*/g, '<span class="serif italic accent">$1</span>');
+// 편집 모드용 표시: 이 글자가 content.js의 어느 항목인지
+const ed = (path) => `data-path="${path}"`;
+const edMd = (path) => `data-path="${path}" data-md`;
+// 사진: 파일이 없으면 숨겨서 뒤의 임시 그림이 보임
+const photo = (src, alt = "") => src ? `<img class="photo" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.classList.add('is-missing')">` : "";
+const $ = (id) => document.getElementById(id);
+
+// 사진이 없을 때 보일 임시 그림
+const PLACEHOLDERS = {
+  cafe: `<div class="ring"></div><div class="cup"><span>Moa</span></div>`,
+  mag:  `<div class="mag-top"><span>VOL.07</span><span>2025 SPRING</span></div><div class="mag-title">Slow<br><i class="serif italic">days</i></div><div class="mag-bar"></div>`,
+  skin: `<div class="bottle b1"></div><div class="bottle b2"></div><div class="bottle b3"></div>`,
+  fest: `<div class="blob a"></div><div class="blob b"></div><div class="fest-text">Riverside<br>Sound Fest<small>2025.09.20 — 21</small></div>`,
+};
+const placeholderOf = (p) => PLACEHOLDERS[p.placeholder]
+  ? { cls: "art-" + p.placeholder, html: PLACEHOLDERS[p.placeholder] }
+  : { cls: "art-plain", html: `<span class="plain-title">${esc(p.title)}</span>` };
+const pad = (i) => String(i + 1).padStart(2, "0");
+
+function renderProfile() {
+  document.title = `${P.nameKo} — ${P.role}`;
+  document.querySelectorAll('[data-c="firstEn"]').forEach((el) => (el.textContent = P.firstEn));
+  const status = $("status");
+  status.hidden = !P.status;
+  status.querySelector("span").textContent = P.status || "";
+  const mail = $("contactEmail");
+  mail.href = "mailto:" + P.email;
+  mail.firstElementChild.outerHTML = `<span ${ed("profile.emailLabel")}>${esc(P.emailLabel || P.email)}</span>`;
+  $("socials").innerHTML = P.links.map((l, i) => `<a href="${esc(l.url)}" target="_blank" rel="noopener" ${ed(`profile.links.${i}.label`)}>${esc(l.label)}</a>`).join("");
+  $("copy").textContent = `© ${P.year} ${P.firstEn} ${P.lastEn}`;
+  // 전화번호는 링크 안에서 전화 걸기가 안 될 수 있어 글자로 보여줌 (누르면 휴대폰에서는 전화 연결)
+  $("phone").innerHTML = P.phone ? `<span class="label">Phone</span> <a href="tel:${esc(P.phone.replace(/[^0-9+]/g, ""))}" ${ed("profile.phone")}>${esc(P.phone)}</a>` : "";
+}
+renderProfile();
+
+$("heroIntro").outerHTML = `<p class="hero__intro" id="heroIntro" ${edMd("home.intro")}>${md(C.home.intro)}</p>`;
+$("workNote").outerHTML = `<p class="section__note reveal" id="workNote" ${edMd("home.workNote")}>${md(C.home.workNote)}</p>`;
+$("aboutLead").outerHTML = `<p class="about__lead reveal" id="aboutLead" ${edMd("home.aboutLead")}>${md(C.home.aboutLead)}</p>`;
+$("aboutBody").outerHTML = `<p class="about__body reveal" id="aboutBody" ${edMd("home.aboutBody")}>${md(C.home.aboutBody)}</p>`;
+$("stats").innerHTML = C.home.stats.map((s, i) => `
+  <div class="stat"><div class="stat__num" data-num="home.stats.${i}.value" data-count="${s.value}" data-decimals="${s.decimals || 0}" data-suffix="${esc(s.suffix || "")}">0</div><div class="stat__label" ${ed(`home.stats.${i}.label`)}>${esc(s.label)}</div></div>`).join("");
+const timelineItem = (t, base) => `<li><span class="when" ${ed(base + ".when")}>${esc(t.when)}</span><div><div class="what" ${ed(base + ".what")}>${esc(t.what)}</div>${t.where ? `<div class="where" ${ed(base + ".where")}>${esc(t.where)}</div>` : ""}</div></li>`;
+$("homeExperience").innerHTML = C.about.experience.map((t, i) => timelineItem(t, `about.experience.${i}`)).join("");
+$("homeAwards").innerHTML = C.about.awards.map((t, i) => timelineItem(t, `about.awards.${i}`)).join("");
+$("homeTools").innerHTML = C.about.tools.map((t, i) => `<span ${ed(`about.tools.${i}.name`)}>${esc(t.name)}</span>`).join("");
+
+/* ── 첫 화면: 로고 → 흐려지며 메인 등장 ── */
+(() => {
+  const root = document.documentElement;
+  const splash = $("splash");
+  const loaded = () => document.body.classList.add("loaded");
+  if (root.classList.contains("intro-seen")) { loaded(); return; }
+  try { sessionStorage.setItem("pf-intro", "1"); } catch (e) {}
+  if (window.PF_SHELL) {
+    // 확인용 링크: 바깥 틀이 이미 같은 로고를 보여주고 있으니 등장 효과 없이 이어받음
+    splash.classList.add("show", "no-anim");
+    setTimeout(() => splash.classList.remove("no-anim"), 60);
+  } else {
+    void splash.offsetWidth; // 처음 상태를 확정해야 등장 효과가 재생됨
+    splash.classList.add("show");
+  }
+  setTimeout(() => { splash.classList.add("out"); root.classList.remove("intro"); }, 1500);
+  setTimeout(loaded, 1700); // 흐림이 걷히는 동안 제목이 올라오기 시작
+  setTimeout(() => splash.classList.add("gone"), 2500);
+})();
+
+/* ── 헤더 ── */
+const header = document.getElementById("header");
+addEventListener("scroll", () => header.classList.toggle("scrolled", scrollY > 40), { passive: true });
+
+/* ── 스크롤 등장 + 카운트업 ── */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("in");
+    e.target.querySelectorAll("[data-count]").forEach(countUp);
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+function countUp(el) {
+  const dec = +(el.dataset.decimals || 0);
+  const suffix = el.dataset.suffix || "";
+  el.innerHTML = `<span class="n">${(0).toFixed(dec)}</span>${suffix ? `<span class="sfx">${suffix}</span>` : ""}`;
+  const n = el.firstElementChild;
+  requestAnimationFrame(() => el.classList.add("counting"));
+  const start = performance.now() + 150, dur = 2200;
+  const step = (now) => {
+    const t = Math.max(0, Math.min(1, (now - start) / dur));
+    // 편집 모드에서 숫자를 바꾸면 목표값도 바뀌므로 매 프레임 다시 읽음
+    n.textContent = (parseFloat(el.dataset.count) * (1 - Math.pow(1 - t, 5))).toFixed(dec);
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/* ── 커서 ── */
+const cursor = document.getElementById("cursor");
+let mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my;
+addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; });
+(function loop() {
+  cx += (mx - cx) * 0.18; cy += (my - cy) * 0.18;
+  cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll("a, button, .tools span").forEach((el) => {
+  el.addEventListener("mouseenter", () => cursor.classList.add("is-link"));
+  el.addEventListener("mouseleave", () => cursor.classList.remove("is-link"));
+});
+
+/* ── 작업 카드 (편집 모드에서 추가·삭제하면 다시 그림) ── */
+function renderWorks() {
+  $("works").innerHTML = C.projects.map((p, i) => {
+    const ph = placeholderOf(p);
+    const b = `projects.${i}`;
+    return `
+    <article class="work reveal ${ph.cls}" data-id="${i}">
+      <div class="work__thumb" data-img="${b}.cover">
+        <span class="work__tag" ${ed(b + ".tag")}>${esc(p.tag)}</span>
+        <div class="work__art">${ph.html}${photo(p.cover, p.title)}</div>
+      </div>
+      <div class="work__meta">
+        <div><h3 class="work__title"><span ${ed(b + ".title")}>${esc(p.title)}</span> <span class="work__arrow">→</span></h3><p class="work__sub" ${ed(b + ".sub")}>${esc(p.sub)}</p></div>
+        <span class="work__num">${pad(i)}</span>
+      </div>
+    </article>`;
+  }).join("");
+
+  document.querySelectorAll(".work").forEach((w, i) => {
+    // 같은 줄의 카드는 살짝 시차를 둠 (사진 커튼 · 글자 페이드에 같이 쓰임)
+    w.style.setProperty("--d", (i % 2) * 0.12 + "s");
+    io.observe(w);
+    w.addEventListener("mouseenter", () => cursor.classList.add("is-view"));
+    w.addEventListener("mouseleave", () => cursor.classList.remove("is-view"));
+
+    // 썸네일 미세 패럴랙스
+    const t = w.querySelector(".work__thumb");
+    const art = t.querySelector(".work__art");
+    t.addEventListener("mousemove", (e) => {
+      const r = t.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      art.style.transform = `scale(1.06) translate(${x * -14}px, ${y * -14}px)`;
+    });
+    t.addEventListener("mouseleave", () => { art.style.transform = ""; });
+
+    w.setAttribute("tabindex", "0");
+    const open = () => openModal(+w.dataset.id);
+    w.addEventListener("click", open);
+    w.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target === w) open(); });
+  });
+}
+renderWorks();
+
+/* ── 상세 패널 ── */
+const modal = document.getElementById("modal");
+let currentProject = -1;
+/* ── 사진 슬라이드 ── */
+const track = $("mTrack");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 지금 보이는 장들 (파일이 없는 사진은 숨겨지므로 빼고 셈. 편집 중에는 빈 칸도 한 장으로 보임)
+const visibleSlides = () => [...track.children].filter((s) => getComputedStyle(s).display !== "none");
+const currentSlide = () => Math.round(track.scrollLeft / (track.clientWidth || 1));
+function goToSlide(n, smooth = true) {
+  const max = visibleSlides().length - 1;
+  const k = Math.max(0, Math.min(max, n));
+  track.scrollTo({ left: k * track.clientWidth, behavior: smooth && !reduceMotion ? "smooth" : "auto" });
+  syncSlider(k);
+}
+// 화살표·점·장 번호를 지금 위치에 맞춤 (사진 파일을 못 찾았을 때도 다시 부름)
+function syncSlider(k = currentSlide()) {
+  const n = visibleSlides().length;
+  k = Math.max(0, Math.min(n - 1, k));
+  $("mSlider").classList.toggle("single", n <= 1);
+  $("mPrev").disabled = k <= 0;
+  $("mNext").disabled = k >= n - 1;
+  $("mCount").textContent = n ? `${k + 1} / ${n}` : "";
+  const dots = $("mDots");
+  if (dots.children.length !== n) {
+    dots.innerHTML = Array.from({ length: n }, (_, d) => `<button type="button" class="slider__dot" aria-label="${d + 1}번째 사진"></button>`).join("");
+  }
+  [...dots.children].forEach((d, idx) => d.classList.toggle("on", idx === k));
+}
+function renderGallery(i, keep = false) {
+  const p = C.projects[i];
+  const card = document.querySelector(`.work[data-id="${i}"]`);
+  const artCls = [...card.classList].find((c) => c.startsWith("art-"));
+  const at = keep ? currentSlide() : 0;
+  // 첫 장: 카드와 같은 대표 사진(없으면 임시 그림)
+  const cover = `<div class="slide modal__visual ${artCls}" data-img="projects.${i}.cover" role="group" aria-label="대표 사진">${card.querySelector(".work__art").outerHTML}</div>`;
+  const rest = (p.gallery || []).map((src, k) =>
+    // 사진이 실제로 불러와진 뒤에만 슬라이드에 넣음 (없는 파일 때문에 화살표가 잠깐 보였다 사라지지 않게)
+    `<figure class="slide gallery__item is-pending" data-img="projects.${i}.gallery.${k}" role="group" aria-label="상세 사진 ${k + 1}"><img src="${esc(src)}" alt="${esc(p.title)} 상세 사진 ${k + 1}" onload="this.parentNode.classList.remove('is-pending');syncSlider()" onerror="this.parentNode.classList.remove('is-pending');this.parentNode.classList.add('is-missing');syncSlider()"></figure>`).join("");
+  track.innerHTML = cover + rest;
+  const art = track.querySelector(".work__art");
+  if (art) art.style.transform = "";
+  track.scrollLeft = 0;
+  if (keep) goToSlide(at, false); else syncSlider(0);
+}
+$("mPrev").addEventListener("click", () => goToSlide(currentSlide() - 1));
+$("mNext").addEventListener("click", () => goToSlide(currentSlide() + 1));
+$("mDots").addEventListener("click", (e) => {
+  const d = e.target.closest(".slider__dot");
+  if (d) goToSlide([...d.parentNode.children].indexOf(d));
+});
+let syncQueued = false;
+track.addEventListener("scroll", () => {
+  if (syncQueued) return;
+  syncQueued = true;
+  requestAnimationFrame(() => { syncQueued = false; syncSlider(); });
+}, { passive: true });
+addEventListener("resize", () => { if (currentProject >= 0) goToSlide(currentSlide(), false); });
+// 키보드 ← → (글자를 고치는 중에는 커서 이동이 되도록 건드리지 않음)
+addEventListener("keydown", (e) => {
+  if (currentProject < 0 || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+  if (e.target.closest && e.target.closest("[contenteditable], input, textarea")) return;
+  e.preventDefault();
+  goToSlide(currentSlide() + (e.key === "ArrowRight" ? 1 : -1));
+});
+// 마우스로 끌어서 넘기기 (터치·트랙패드는 브라우저 스크롤 그대로)
+let drag = null;
+track.addEventListener("pointerdown", (e) => {
+  if (e.pointerType !== "mouse" || e.button !== 0 || e.target.closest("button, [contenteditable]")) return;
+  drag = { x: e.clientX, left: track.scrollLeft, start: currentSlide(), moved: false };
+  track.setPointerCapture(e.pointerId);
+});
+track.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x;
+  if (Math.abs(dx) > 4) { drag.moved = true; track.classList.add("dragging"); }
+  if (drag.moved) track.scrollLeft = drag.left - dx;
+});
+const endDrag = (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x;
+  const was = drag;
+  drag = null;
+  track.classList.remove("dragging");
+  if (!was.moved) return;
+  // 1/5 이상 끌면 다음(이전) 장으로, 아니면 제자리
+  const step = Math.abs(dx) > track.clientWidth / 5 ? (dx < 0 ? 1 : -1) : 0;
+  goToSlide(was.start + step);
+};
+track.addEventListener("pointerup", endDrag);
+track.addEventListener("pointercancel", endDrag);
+function openModal(i) {
+  const p = C.projects[i];
+  const b = `projects.${i}`;
+  const editing = document.body.classList.contains("ed-on");
+  currentProject = i;
+  $("mNum").textContent = "Project " + pad(i);
+  $("mTitle").innerHTML = `<span ${ed(b + ".title")}>${esc(p.title)}</span>`;
+  $("mSub").innerHTML = `<span ${ed(b + ".summary")}>${esc(p.summary || p.sub)}</span>`;
+  // 편집 중에는 비어 있는 칸도 보여서 채울 수 있게 함
+  const facts = [["Client", "client"], ["Role", "role"], ["Period", "period"], ["Contribution", "contribution"]].filter(([, k]) => editing || p[k]);
+  $("mFacts").innerHTML = facts.map(([label, k]) => `<div><dt>${label}</dt><dd ${ed(`${b}.${k}`)}>${esc(p[k] || "")}</dd></div>`).join("");
+  $("mCase").innerHTML = [
+    (editing || p.background) && `<h4>Overview</h4><p ${edMd(b + ".background")}>${md(p.background || "")}</p>`,
+    (editing || p.process || (p.steps && p.steps.length)) && `<h4>Process</h4>${p.process || editing ? `<p ${edMd(b + ".process")}>${md(p.process || "")}</p>` : ""}${p.steps && p.steps.length ? `<ol class="steps">${p.steps.map((s, k) => `<li><b ${ed(`${b}.steps.${k}.title`)}>${esc(s.title)}</b><span ${ed(`${b}.steps.${k}.text`)}>${esc(s.text)}</span></li>`).join("")}</ol>` : ""}`,
+    p.notes && p.notes.length && `<h4>Principle</h4><dl class="notes">${p.notes.map((n, k) => `<div><dt ${ed(`${b}.notes.${k}.label`)}>${esc(n.label)}</dt><dd ${edMd(`${b}.notes.${k}.text`)}>${md(n.text)}</dd></div>`).join("")}</dl>`,
+    p.results && p.results.length && `<h4>Result</h4><div class="result">${p.results.map((r, k) => `<div><b ${ed(`${b}.results.${k}.value`)}>${esc(r.value)}</b><small ${ed(`${b}.results.${k}.label`)}>${esc(r.label)}</small></div>`).join("")}</div>`,
+  ].filter(Boolean).join("");
+  modal.querySelector(".modal__panel").scrollTop = 0;
+  modal.classList.add("open");
+  renderGallery(i); // 패널이 보인 뒤 그려야 슬라이드 폭을 바로 잴 수 있음
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  cursor.classList.remove("is-view");
+  document.dispatchEvent(new CustomEvent("portfolio:modal", { detail: { i } }));
+}
+function closeModal() {
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  currentProject = -1;
+}
+modal.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closeModal));
+addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+// 편집기에서 쓰는 함수들
+window.PF = { page: "home", renderWorks, renderGallery, renderProfile, openModal, closeModal, goToSlide, syncSlider, current: () => currentProject };
+
+/* ── 편집기: 내 컴퓨터(file:// 또는 localhost)에서 열었거나, 확인용 링크에서 편집 권한이 있을 때만 불러옴 ── */
+if (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname) || (window.PF_SHELL && window.PF_SHELL.canEdit)) {
+  const link = document.createElement("link");
+  link.rel = "stylesheet"; link.href = "editor.css";
+  document.head.append(link);
+  const s = document.createElement("script");
+  s.src = "editor.js";
+  document.body.append(s);
+}
+</script>
+</body>
+</html>
